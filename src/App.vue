@@ -2,11 +2,11 @@
   <input type="text" v-model="userName">
 
   <template v-for="user in users" :key="user.id">
-    <input type="checkbox" @click="userName = user.firsName" :checked="userName == user.firsName">{{ user.firsName }}
+    <input type="checkbox" @click="userName = user.firstName" :checked="userName == user.firstName">{{ user.firstName }}
   </template>
 
   <select name="" id="" v-model="userName">
-    <option :value="user.firsName" v-for="user in users" :key="user.id">{{ user.firsName }}</option>
+    <option :value="user.firstName" v-for="user in users" :key="user.id">{{ user.firstName }}</option>
   </select>
 </template>
 
@@ -18,15 +18,15 @@ export default {
     users: [
       {
         id: 1,
-        firsName: 'Alexandre'
+        firstName: 'Alexandre'
       },
       {
         id: 2,
-        firsName: 'João'
+        firstName: 'João'
       },
       {
         id: 1,
-        firsName: 'Maria'
+        firstName: 'Maria'
       }
     ]
   }),
