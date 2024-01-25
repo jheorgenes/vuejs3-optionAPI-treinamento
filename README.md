@@ -18,6 +18,12 @@ npm create vue@latest
 npm install
 ```
 
+### Debounce Lodash
+
+```sh
+npm i --save lodash
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh
