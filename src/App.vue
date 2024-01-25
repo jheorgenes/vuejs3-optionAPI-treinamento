@@ -36,15 +36,16 @@ export default {
     add(value) {
       this.count+= value;
     },
-    /* Usando o lodash para executar funções conforme a necessidade de atraso dessas funções */
-    /* No exemplo abaixo, usando o debounce: É identificado o momento da pausa da digitação e então roda o tempo determinado para executar a função */
-    // search: _.debounce(() => {
-    //   console.log('search');
-    // }, 1000),
-    /* No exemplo abaixo, usando o throttle: Começa a rodar o tempo de espera determinado, no momento em que foi chamado essa função, e então é executado o evento dentro da função anônima abaixo */
-    search: _.throttle(() => {
+    /* O lodash serve para executar as funções com um tempo programado, conforme o tipo de atributo passado, como nos exemplos abaixo. */
+    /* Usando debounce: Ao iniciar digitação, aguarda parar de digitar e então é executado a espera (do tempo programado) e depois executado a função de callback */
+    search: _.debounce(() => {
       console.log('search');
     }, 1000),
+    
+    /* Usando throttle: Quando é iniciado a digitação, é executado a espera (do tempo programado) e depois executado a função de callback */
+    // search: _.throttle(() => {
+    //   console.log('search');
+    // }, 1000),
   }
 }
 </script>
