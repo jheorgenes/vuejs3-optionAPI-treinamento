@@ -2,12 +2,6 @@
 
   <Nav />
   <router-view></router-view>
-  <br>
-  <br>
-  <button @click="count++">Add - {{ count }}</button>
-
-  <!-- <CountChild @addCount="add" /> -->
-  <CountChild @addCount="(value) => count+= value" />
 </template>
 
 <script>
