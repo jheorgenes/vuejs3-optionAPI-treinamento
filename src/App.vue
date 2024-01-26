@@ -4,7 +4,7 @@
   <router-view></router-view>
   <br>
 
-  <input type="text" placeholder="Search" @keyup="search">
+  <!-- <input type="text" placeholder="Search" @keyup="search"> -->
 </template>
 
 <script>

@@ -1,73 +1,59 @@
 <template>
-  <button @click="openModal = true">Abrir Modal</button>
+  <input type="text" placeholder="Search" @keyup="search">
 
-  <template v-if="openModal">
-    <Modal>
-      <template #header>
-        <h2>Header do Modal</h2>
-      </template>
+  <ul>
+    <li v-for="(user, index) in users" :key="index">{{ user.firstName }} {{ user.lastName }}</li>
+  </ul>
 
-      <template #default>Valor Default</template>
-
-      <template #footer>
-        Footer do Modal
-      </template>
-    </Modal>
-  </template>
+  <div v-html="userNotFound"></div>
 </template>
 
 <script>
-import Modal from '@/components/Modal.vue';
+import http from '@/services/http';
+import _ from 'lodash'
 
 export default {
-  components: {
-    Modal
-  },
   data: () => ({
-    openModal: false,
-    countComputed: 0,
-    countFunction: 0,
-    user: {
-      firstName: 'Alexandre',
-      lastName: 'Cardoso'
-    },
-    users: [
-      {
-        firstName: 'Alexandre',
-        is_Admin: 1
-      },
-      {
-        firstName: 'Maria',
-        is_Admin: 0
-      },
-      {
-        firstName: 'João',
-        is_Admin: 1
-      },
-      {
-        firstName: 'Pedro',
-        is_Admin: 0
-      }
-    ]
+    userSearch: '',
+    users: [],
+    loading: true
   }),
   computed: {
-    fullname() {
-      return this.user.firstName + ' ' + this.user.lastName;
-    },
-    usersIsNotAdmin() {
-      return this.users.filter((user) => user.is_Admin === 0);
-    },
-    computedCount() {
-      console.log('called computed');
-      return this.countComputed;
+    userNotFound() {
+      return (!this.loading && this.users.length <= 0) ? '<span id="notFound">Nenhum user encontrado</span>' : '';
+    }
+  },
+  async mounted() {
+    try {
+      const { data } = await http.get('/api/users');
+      this.loading = false;
+      console.log(data);
+      this.users = data;
+    } catch (error) {
+      console.log(error.response.data);
     }
   },
   methods: {
-    funtionCount() {
-      console.log('called function');
-      return this.countFunction;
-    }
+    search: _.debounce(async function(event) {
+      try {
+        const { data } = await http.get('/api/users/search', {
+          params: {
+            user: event.target.value
+          }
+        });
+        console.log(data);
+        this.users = data;
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    }, 1000)
   }
 }
 </script>
+
+<style>
+#notFound {
+  color: red;
+}
+</style>
 
