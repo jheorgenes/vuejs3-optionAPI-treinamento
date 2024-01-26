@@ -24,6 +24,12 @@ npm install
 npm i --save lodash
 ```
 
+### laravel-vue-pagination
+
+```sh
+npm i laravel-vue-pagination
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh

@@ -1,18 +1,28 @@
 <template>
   <input type="text" placeholder="Search" @keyup="search">
-
   <ul>
-    <li v-for="(user, index) in users" :key="index">{{ user.firstName }} {{ user.lastName }}</li>
+    <li v-for="(user, index) in users.data" :key="index">{{ user.firstName }} {{ user.lastName }}</li>
   </ul>
-
+  <Bootstrap5Pagination :data="users" @pagination-change-page="getUsers">
+    <template #prev-nav>
+      <span>&lt; Anterior</span>
+    </template>
+    <template #next-nav>
+      <span>Próxima &gt;</span>
+    </template>
+  </Bootstrap5Pagination>
   <div v-html="userNotFound"></div>
 </template>
 
 <script>
 import http from '@/services/http';
-import _ from 'lodash'
+import _ from 'lodash';
+import { Bootstrap5Pagination } from 'laravel-vue-pagination';
 
 export default {
+  components: {
+    Bootstrap5Pagination
+  },
   data: () => ({
     userSearch: '',
     users: [],
@@ -23,17 +33,21 @@ export default {
       return (!this.loading && this.users.length <= 0) ? '<span id="notFound">Nenhum user encontrado</span>' : '';
     }
   },
-  async mounted() {
-    try {
-      const { data } = await http.get('/api/users');
-      this.loading = false;
-      console.log(data);
-      this.users = data;
-    } catch (error) {
-      console.log(error.response.data);
-    }
+  mounted() {
+    this.getUsers();
   },
   methods: {
+    async getUsers(page = 1) {
+      try {
+        console.log('page =>', page);
+        const { data } = await http.get('/api/users?page='+Number(page));
+        this.loading = false;
+        console.log(data);
+        this.users = data;
+      } catch (error) {
+        console.log(error.response.data);
+      }
+    },
     search: _.debounce(async function(event) {
       try {
         const { data } = await http.get('/api/users/search', {
@@ -46,7 +60,7 @@ export default {
       } catch (error) {
         console.log(error.response.data);
       }
-    }, 1000)
+    }, 1000),
   }
 }
 </script>
