@@ -27,7 +27,6 @@ export default {
     users: [],
     loading: true,
     searchInput: '',
-    searched: false
   }),
   computed: {
     userNotFound() {
@@ -39,7 +38,7 @@ export default {
   },
   methods: {
     handlePagination(page) {
-      return this.searched ? this.searchUsers(page) : this.getUsers(page);
+      return this.searchInput ? this.searchUsers(page) : this.getUsers(page);
     },
     async getUsers(page = 1) {
       try {
@@ -60,11 +59,9 @@ export default {
 
         // Se não tiver input, chamará o método getUsers
         if(!this.searchInput) {
-          this.searched = false;
           this.getUsers();
         } else {
         //Habilita a pesquisa e recebe a nova lista pesquisada
-          this.searched = true;
           this.users = data;
         }
       } catch (error) {
