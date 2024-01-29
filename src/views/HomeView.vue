@@ -1,9 +1,9 @@
 <template>
-  <input type="text" placeholder="Search" @keyup="search">
+  <input type="text" placeholder="Search" @keyup="search" v-model="searchInput">
   <ul>
     <li v-for="(user, index) in users.data" :key="index">{{ user.firstName }} {{ user.lastName }}</li>
   </ul>
-  <Bootstrap5Pagination :data="users" @pagination-change-page="getUsers">
+  <Bootstrap5Pagination :data="users" @pagination-change-page="handlePagination" :limit="5" :show-disabled="true" size="default" align="center">
     <template #prev-nav>
       <span>&lt; Anterior</span>
     </template>
@@ -24,42 +24,55 @@ export default {
     Bootstrap5Pagination
   },
   data: () => ({
-    userSearch: '',
     users: [],
-    loading: true
+    loading: true,
+    searchInput: '',
+    searched: false
   }),
   computed: {
     userNotFound() {
-      return (!this.loading && this.users.length <= 0) ? '<span id="notFound">Nenhum user encontrado</span>' : '';
+      return (!this.loading && this.users.data.length <= 0) ? '<span id="notFound">Nenhum user encontrado</span>' : '';
     }
   },
   mounted() {
     this.getUsers();
   },
   methods: {
+    handlePagination(page) {
+      return this.searched ? this.searchUsers(page) : this.getUsers(page);
+    },
     async getUsers(page = 1) {
       try {
-        console.log('page =>', page);
         const { data } = await http.get('/api/users?page='+Number(page));
         this.loading = false;
-        console.log(data);
         this.users = data;
       } catch (error) {
         console.log(error.response.data);
       }
     },
-    search: _.debounce(async function(event) {
+    async searchUsers(page = 1) {
       try {
-        const { data } = await http.get('/api/users/search', {
+        const { data } = await http.get('/api/users/search?page='+Number(page), {
           params: {
-            user: event.target.value
+            user: this.searchInput
           }
         });
-        console.log(data);
-        this.users = data;
+
+        // Se não tiver input, chamará o método getUsers
+        if(!this.searchInput) {
+          this.searched = false;
+          this.getUsers();
+        } else {
+        //Habilita a pesquisa e recebe a nova lista pesquisada
+          this.searched = true;
+          this.users = data;
+        }
       } catch (error) {
         console.log(error.response.data);
       }
+    },
+    search: _.debounce(function() {
+      this.searchUsers();
     }, 1000),
   }
 }
