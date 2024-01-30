@@ -30,6 +30,12 @@ npm i --save lodash
 npm i laravel-vue-pagination
 ```
 
+### Vue currency input
+
+```sh
+npm i vue-currency-input
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh

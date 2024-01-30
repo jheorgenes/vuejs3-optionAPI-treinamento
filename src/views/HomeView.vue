@@ -1,65 +1,53 @@
 <template>
-  <input type="text" v-model="user.firstName" placeholder="FirstName">
-  <input type="text" v-model="user.lastName" placeholder="LastName">
-  <!-- <input type="text" v-model="user.address.street" placeholder="Street Adress"> -->
+  <Currency type="text" v-model="dolar" placeholder="Dolar" :options="{ currency: 'USD' }" />
   <hr>
-  
   <ul>
-    <li v-for="(item, index) in items" :key="index">{{ item.name }} <input type="text" v-model="item.price"></li>
+    <li>{{ dolarTodayValue }}</li>
+    <li>{{ dolarToReaisValue }}</li>
   </ul>
 </template>
 
 <script>
+import format from '../services/format';
+import Currency from '@/components/Currency.vue';
+import http from '@/services/http';
 
 export default {
+  components: {
+    Currency
+  },
   data: () => ({
-    firstName: '',
-    lastName: '',
-    user: {
-      firstName: '',
-      lastName: '',
-      address: {
-        street: ''
-      }
-    },
-    items: [
-      {
-        id: 1,
-        name: 'teste1',
-        price: 10
-      },
-      {
-        id: 2,
-        name: 'teste2',
-        price: 100
-      },
-    ]
+    dolar: 0,
+    dolarToday: 0,
+    dolarToReais: 0
   }),
-  mounted() {
-    console.log('mounted');
+  async mounted(){
+    try {
+      const dolarToday = await this.getDolar();
+      this.dolarToday = dolarToday['high']; //Extraindo o valor de high (contém o valor do dolar)
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  methods: {
+    async getDolar(type = 'USD-BRL') {
+      const { data } = await http.get('https://economia.awesomeapi.com.br/json/last/'+type);
+      const typeCurrency = type.split('-').join(''); // Fazendo a junção do tipo. Ex.: 'USD-BRL' em 'USDBRL'
+      return data[typeCurrency];
+    }
+  },
+  computed: {
+    dolarToReaisValue() {
+      return `O valor em reais de ${format(this.dolar, 'en-US', 'USD')} é de: ${format(this.dolarToReais, 'pt-BR', 'BRL')}`;
+    },
+    dolarTodayValue() {
+      return `O dólar hoje está em: ${format(this.dolarToday, 'en-US', 'USD')}`;
+    }
   },
   watch: {
-    firstName(value) {
-      console.log('new =>', value);
-    },
-    'user.firstName': function(value, oldValue) {
-      console.log('new =>', value);
-      console.log('old =>', oldValue);
-    },
-    items: { /* Escutando mudanças em um array */
-      handler(item) {
-        console.log('carregou');
-        // item.forEach(element => {
-        //   if(!Number.isInteger(Number(element.price))) {
-        //     console.log('Não é um integer ' + element.price);
-        //   }
-        //   console.log(element);
-        // });
-      },
-      deep: true, // O deep aqui, habilita uma escuta profunda
-      immediate: true //O immediate habilita que a escuta seja executada assim que o componente for montado (antes do mounted hook)
+    dolar(value) {
+      this.dolarToReais = value * this.dolarToday;
     }
-
   }
 }
 </script>
