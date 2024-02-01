@@ -36,6 +36,12 @@ npm i laravel-vue-pagination
 npm i vue-currency-input
 ```
 
+### Vuex
+
+```sh
+npm i vuex
+```
+
 ### Compile and Hot-Reload for Development
 
 ```sh

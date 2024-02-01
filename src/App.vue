@@ -1,6 +1,7 @@
 <template>
 
   <!-- <Nav /> -->
+  <Counter />
   <router-view></router-view>
   <br>
 
@@ -11,11 +12,13 @@
 import Nav from '@/components/Nav.vue'; 
 import CountChild from './components/CountChild.vue';
 import _ from 'lodash';
+import Counter from '@/components/Counter.vue'
 
 export default {
   components: {
     Nav,
-    CountChild
+    CountChild,
+    Counter
   },
   data: () => ({
     count: 0,

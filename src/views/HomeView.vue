@@ -1,27 +1,18 @@
 <template>
-  <button @click="increment">Add</button>
-  {{ count }}
+  <!-- <button @click="increment">Add</button> -->
+  <button @click="$store.dispatch('increment')">Add</button>
+  {{ $store.state.count }}
   <hr>
-  <ul>
-    <li v-for="(user, index) in usersData" :key="index">{{ user.firstName }}</li>
-  </ul>
-  {{ getTotalUser }}
-  <hr>
-  {{ name }}
+  {{ $store.getters.getCounter }}
 </template>
 
 <script>
-import count from '@/mixins/count.js';
-import users from '@/mixins/users.js';
-
 export default {
-  data: () => ({ name: 'Jheorgenes' }),
-  mixins: [ 
-    count, 
-    users 
-  ],
-  mounted() {
-    console.log('Chamou o mounted do componente HomeView');
+  methods: {
+    increment() {
+      /* Acionando o store através da action */
+      this.$store.dispatch('increment');
+    }
   }
 }
 </script>
