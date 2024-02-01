@@ -1,13 +1,29 @@
 <template>
   <button @click="showSomething()">Show</button>
 
-  <input type="text" ref="inputElement" v-if="showElement">
+  <!-- <teleport to="#input">
+    <input type="text" ref="inputElement">
+  </teleport> -->
+
+  <button @click="open = !open">Open Modal</button>
+
+  <teleport to="#modal">
+    <Modal v-if="open">
+      qualquer coisa aqui dentro do modal.
+    </Modal>
+  </teleport>
 </template>
 
 <script>
+import Modal from '@/components/Modal.vue';
+
 export default {
+  components: {
+    Modal
+  },
   data: () => ({
-    showElement: false
+    showElement: false,
+    open: false
   }),
   methods: {
     // $nextTick permite trabalhar de forma assincrona
@@ -32,3 +48,9 @@ export default {
   }
 }
 </script>
+
+<style>
+#app {
+  color: red;
+}
+</style>
