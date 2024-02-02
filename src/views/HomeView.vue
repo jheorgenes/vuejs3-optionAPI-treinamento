@@ -1,22 +1,27 @@
 <template>
-  <!-- <button @click="increment">Add</button> -->
-  <button @click="$store.dispatch('increment')">Add</button>
-  {{ count }}
+  <!-- <button @click="$store.commit('counter/increment')">Add</button> -->
+  <button @click="increment">Add</button>
+  {{ $store.state.counter.count }}
   <hr>
-  {{ getCounter }}
+  <h2>Users</h2>
+  <template v-if="$store.state.users.data.length > 0">
+    <button @click="$store.dispatch('users/hideUsers')">Hide Users</button>
+    <ul>
+      <li v-for="(user, index) in $store.state.users.data" :key="index">{{ user.firstName }}</li>
+    </ul>
+  </template>
+  <template v-else>
+    <button @click="$store.dispatch('users/getUsers')">Get Users</button>
+  </template>
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
 
 export default {
-  computed: {
-    ...mapState(['count']),
-    ...mapGetters(['getCounter'])
-  },
   methods: {
-    // ...mapActions(['increment']),
-    ...mapMutations(['increment'])
+    increment() {
+      this.$store.commit('counter/increment');
+    }
   }
 }
 </script>
