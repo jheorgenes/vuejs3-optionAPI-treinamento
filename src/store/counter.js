@@ -5,7 +5,7 @@ export default {
   }),
   mutations: {
     increment(state, payload) {
-      state.count++;
+      state.count+= payload;
     }
   },
   actions: {
