@@ -1,18 +1,22 @@
 <template>
   <!-- <button @click="increment">Add</button> -->
   <button @click="$store.dispatch('increment')">Add</button>
-  {{ $store.state.count }}
+  {{ count }}
   <hr>
-  {{ $store.getters.getCounter }}
+  {{ getCounter }}
 </template>
 
 <script>
+import { mapActions, mapGetters, mapMutations, mapState } from 'vuex';
+
 export default {
+  computed: {
+    ...mapState(['count']),
+    ...mapGetters(['getCounter'])
+  },
   methods: {
-    increment() {
-      /* Acionando o store através da action */
-      this.$store.dispatch('increment');
-    }
+    // ...mapActions(['increment']),
+    ...mapMutations(['increment'])
   }
 }
 </script>
